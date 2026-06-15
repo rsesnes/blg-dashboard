@@ -526,6 +526,8 @@ function loadData(){
 }
 
 function renderDashboard(D){
+  var _section = 'init';
+  try {
   var wkArr=Array.isArray(D.weeks)?D.weeks:[D.weeks.w1||0,D.weeks.w2||0,D.weeks.w3||0,D.weeks.w4||0,D.weeks.w5||0,D.weeks.w6||0,D.weeks.w7||0,D.weeks.w8||0,D.weeks.w9||0,D.weeks.w10||0,D.weeks.w11||0,D.weeks.w12||0];
   var wkLabels=D._wkLabels||[];
   var wkShort=wkLabels.map(function(l){return l?l.split(' ')[0]:'';});
@@ -580,13 +582,15 @@ function renderDashboard(D){
     });
   }
 
+  _section='header';
   el('hdr-qtr').textContent=QTR_NAMES[curQ]+' 2026 Live';
 
   // ── ALERT
   var isNewMonth=(curNM===0&&curAR===0);
   if(isNewMonth){
     var prevTotal=(ALL[curMo-1]||{nm:0,ar:0}).nm+(ALL[curMo-1]||{nm:0,ar:0}).ar;
-    el('alertText').innerHTML='<strong>'+curMonth+' MTD: $0</strong> — '+MO_NAMES[curMo-1]+' closed at <span class="alert-good">'+fmt(prevTotal)+'</span>';
+    _section='alert';
+  el('alertText').innerHTML='<strong>'+curMonth+' MTD: $0</strong> — '+MO_NAMES[curMo-1]+' closed at <span class="alert-good">'+fmt(prevTotal)+'</span>';
   } else if(vsBE<0){
     el('alertText').innerHTML='<strong>'+curMonth+' total '+fmt(curTotal)+'</strong> is <span class="alert-diff">'+fmt(Math.abs(vsBE))+'</span> below $240K breakeven.';
   } else {
@@ -594,6 +598,7 @@ function renderDashboard(D){
   }
 
   // ── REVENUE KPIs
+  _section='revenue-kpis';
   el('kpi-nm').textContent=fmt(curNM);
   el('kpi-ar').textContent=fmt(curAR);
   el('kpi-total').textContent=curTotal>0?fmt(curTotal):'$0 MTD';
@@ -609,6 +614,7 @@ function renderDashboard(D){
   // ── DONUT
   var prevMoTotal=(ALL[curMo-1]||{nm:0,ar:0}).nm+(ALL[curMo-1]||{nm:0,ar:0}).ar;
   var dp=Math.min(Math.round(curTotal/STRETCH*100),100);
+  _section='donut';
   el('donut-pct').textContent=dp+'%';
   el('donut-lbl').innerHTML='<span>'+fmt(curTotal)+'</span>';
   var fc=displayTotal>=STRETCH?'#22c55e':displayTotal>=BREAKEVEN?'#06b6d4':'#f59e0b';
@@ -620,6 +626,7 @@ function renderDashboard(D){
 
   // ── REVENUE: Recent weeks
   var activeWks=wkArr.map(function(v,i){return{v:v,i:i};}).filter(function(w){return w.v>0;}).slice(-6);
+  _section='weekly-bars';
   buildBars('weeklyBars',activeWks.map(function(w){return w.v;}),activeWks.map(function(w){return wkShort[w.i]||('W'+(w.i+1));}),WKSTR,null);
 
   // ── REVENUE: Monthly bars for current quarter
@@ -636,6 +643,7 @@ function renderDashboard(D){
   });
 
   // ── WEEKLY
+  _section='weekly-tab';
   el('wk-qtr-lbl').textContent=QTR_NAMES[curQ]+' 2026';
   buildBars('weeklyFullBars',wkArr,wkShort,WKSTR,null);
   var wr=el('weeklyRows');wr.innerHTML='';
@@ -649,6 +657,7 @@ function renderDashboard(D){
   });
 
   // ── LEADS: Funnel
+  _section='leads-funnel';
   var fStages=[
     {lbl:'Total Leads',val:D.leads.total,color:'#60a5fa',conv:''},
     {lbl:'Consults Booked',val:D.leads.booked,color:'#a78bfa',conv:pct(D.leads.booked,D.leads.total)+' of leads'},
@@ -679,6 +688,7 @@ function renderDashboard(D){
   });}
 
   // ── ANNUAL: Quarter cards
+  _section='annual-quarter';
   var QTR_DEFS=[{q:1,lbl:'Q1 — Jan/Feb/Mar',months:[D.jan,D.feb,D.mar]},{q:2,lbl:'Q2 — Apr/May/Jun',months:[D.apr,D.may,D.jun]},{q:3,lbl:'Q3 — Jul/Aug/Sep',months:[D.jul,D.aug,D.sep]},{q:4,lbl:'Q4 — Oct/Nov/Dec',months:[D.oct,D.nov,D.dec]}];
   var qg=el('qtrGrid');qg.innerHTML='';
   QTR_DEFS.forEach(function(qd){
@@ -706,6 +716,7 @@ function renderDashboard(D){
   // ── QUARTER SUMMARY
   var q1BE=qTotal-BREAKEVEN*3,q1STR=qTotal-STRETCH*3;
   var qN=QTR_NAMES[curQ];
+  _section='quarter-summary';
   var rc=el('revSummaryCard');
   rc.innerHTML='<div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">'+qN+' Revenue Summary</div>'
     +srRow(MO_SHORT[qStart]+' NM + AR',fmt((qMonths[0].nm||0)+(qMonths[0].ar||0)))
@@ -727,6 +738,7 @@ function renderDashboard(D){
     +srRow('Last Mo. New Clients (FU)','<span style="color:var(--gold2)">'+(lm.newClientsTotal||0)+'</span>');
 
   // ── CALLS
+  _section='calls';
   var callSrcs=D.calls.sources||[];
   el('cr-total').textContent=D.calls.total||0;
   el('cr-qualified').textContent=D.calls.qualified||0;
@@ -742,6 +754,7 @@ function renderDashboard(D){
 
   // ── ATTORNEYS
   var totalCasesOverride=CASELOAD_OVERRIDE?Object.values(CASELOAD_OVERRIDE.attorneys).reduce(function(s,a){return s+a.cases;},0):0;
+  _section='attorneys';
   el('ap-cases').textContent=totalCasesOverride||D.attorneys.totalCases||0;
   el('ap-hours').textContent=((D.attorneys.billableHours||0).toFixed(1))+' hrs';
   el('ap-portfolio').textContent=fmt(D.attorneys.portfolioValue||0);
@@ -766,6 +779,7 @@ function renderDashboard(D){
   if(apbEl){apbEl.querySelectorAll('.bar').forEach(function(b,i){b.style.background=ATTY_COLORS[i]||'var(--blue)';});}
 
   // ── RESULTS
+  _section='results';
   var R2=D.results||{};
   var degList=R2.degrees||[];
   var noJailPct=R2.totalDisposed>0?Math.round((R2.totalNoJail||0)/R2.totalDisposed*100):0;
@@ -803,6 +817,7 @@ function renderDashboard(D){
   marquee.forEach(function(m){mg.innerHTML+='<div class="highlight-card"><div class="hl-result">'+m.note+'</div><div class="hl-charge">'+m.charge+'</div><div class="hl-outcome">✓ '+m.outcome+'</div><div class="hl-atty">'+m.atty+'</div></div>';});
 
   // ── PROFITABILITY
+  _section='profitability';
   var paList=D.profitability||[];
   if(paList.length){
     var tFhr=paList.reduce(function(a,b){return (b.feeHr||0)>(a.feeHr||0)?b:a;});
@@ -825,6 +840,7 @@ function renderDashboard(D){
   }
 
   // ── CASE LOAD
+  _section='caseload';
   var totInd=0,totInv=0,totMuni=0,totCases=0;
   attyList.forEach(function(a){totCases+=a.cases||0;totInd+=(a.indictable||0);totInv+=(a.investigation||0);totMuni+=(a.disorderly||0)+(a.dui||0)+(a.mvt||0);});
   var avgCases=attyList.length>0?Math.round(totCases/attyList.length):0;
@@ -842,6 +858,13 @@ function renderDashboard(D){
     clg.innerHTML+='<div class="cl-card"><div class="cl-hdr"><div><div class="cl-name" style="color:'+ATTY_COLORS[i]+'">'+a.name+'</div></div><div><div class="cl-total">'+a.cases+'</div><div class="cl-total-lbl">Active</div></div></div>'+paHtml+'</div>';
   });
   var cu=el('clUpdated');if(cu)cu.textContent='Source: Clio — Last updated: '+(D.attorneys.updated||'unknown');
+}
+
+  } catch(e) {
+    var bar=el('dataBar');
+    if(bar){bar.style.color='var(--red2)';bar.innerHTML='<span>✗</span> Render error in ['+_section+']: '+e.message;}
+    console.error('renderDashboard error in section:', _section, e);
+  }
 }
 
 function srRow(lbl,val){return '<div class="sr"><div class="sr-label">'+lbl+'</div><div class="sr-val">'+val+'</div></div>';}
