@@ -445,7 +445,65 @@
 <script>
 var DATA_URL = "https://raw.githubusercontent.com/rsesnes/blg-dashboard/main/blg_data.json";
 
-var LIVE_DATA = null; // Will be set after fetch
+// Fallback data — renders immediately while live fetch loads
+// Based on last known good data (June 15, 2026)
+var LIVE_DATA = {
+  lastUpdated:"2026-06-15",
+  curMonth:6, curQuarter:2,
+  jan:{nm:244100,ar:34288.67}, feb:{nm:135750,ar:68026.88},
+  mar:{nm:370088,ar:33982.69}, apr:{nm:258250,ar:33927.88},
+  may:{nm:230375,ar:17197.15}, jun:{nm:105000,ar:33592.06},
+  jul:{nm:0,ar:0}, aug:{nm:0,ar:0}, sep:{nm:0,ar:0},
+  oct:{nm:0,ar:0}, nov:{nm:0,ar:0}, dec:{nm:0,ar:0},
+  weeks:[93250,46500,37250,81250,106125,20000,32500,71750,48500,56500,0,0],
+  weekLabels:{w1:"Wk13 Apr 1-7",w2:"Wk14 Apr 8-14",w3:"Wk15 Apr 15-21",w4:"Wk16 Apr 22-30",w5:"Wk17 May 1-7",w6:"Wk18 May 8-14",w7:"Wk19 May 15-21",w8:"Wk20 May 22-31",w9:"Wk21 Jun 1-7",w10:"Wk22 Jun 8-14",w11:"Wk23 Jun 15-21",w12:"Wk24 Jun 22-30"},
+  leads:{total:212,booked:71,completed:67,signed:6,newClients:6},
+  lastMonth:{leads:632,booked:175,completed:185,newClients:22,newClientsTotal:22},
+  sources:[
+    {name:"Google LSA",leads:81,ret:2},{name:"GMB (All)",leads:52,ret:1},
+    {name:"Google Criminal",leads:24,ret:0},{name:"Website",leads:8,ret:1},
+    {name:"Bianchi SEO",leads:18,ret:2},{name:"Facebook",leads:3,ret:0},
+    {name:"Referral",leads:2,ret:0},{name:"Prior Client",leads:0,ret:0},{name:"Other",leads:0,ret:0}
+  ],
+  calls:{total:286,qualified:11,unqualified:12,unrated:263,
+    sources:[
+      {name:"Google LSA",total:107,qualified:5,unqualified:6,unrated:96},
+      {name:"Google My Business",total:109,qualified:3,unqualified:2,unrated:104},
+      {name:"Bianchi SEO",total:32,qualified:1,unqualified:0,unrated:31},
+      {name:"Google Criminal",total:31,qualified:2,unqualified:3,unrated:26},
+      {name:"Facebook",total:3,qualified:0,unqualified:0,unrated:3},
+      {name:"Social",total:1,qualified:0,unqualified:0,unrated:1},
+      {name:"MasterClass",total:2,qualified:0,unqualified:0,unrated:2}
+    ]},
+  attorneys:{totalCases:143,portfolioValue:1405000,annualRevenue:754000,billableHours:384.45,updated:"Jun 2, 2026",
+    list:[
+      {name:"Christopher Eaton",short:"Eaton",cases:29,casesYTD:21,portfolio:443000,annual:0,hours:94.9,indictable:14,dui:5,disorderly:1,mvt:0,dvro:2,investigation:5,juvenile:1,federal:0,victimAdvocate:0,appeal:0},
+      {name:"Danielle Esposito",short:"Esposito",cases:33,casesYTD:18,portfolio:369000,annual:225500,hours:103.48,indictable:18,dui:1,disorderly:4,mvt:0,dvro:0,investigation:5,juvenile:4,federal:0,victimAdvocate:0,appeal:0},
+      {name:"Paul Di Lella",short:"Di Lella",cases:31,casesYTD:19,portfolio:381000,annual:262500,hours:105.2,indictable:16,dui:0,disorderly:5,mvt:0,dvro:0,investigation:7,juvenile:0,federal:1,victimAdvocate:0,appeal:0},
+      {name:"Tricia Margolis",short:"Margolis",cases:50,casesYTD:59,portfolio:212000,annual:266000,hours:80.87,indictable:1,dui:16,disorderly:25,mvt:8,dvro:0,investigation:0,juvenile:0,federal:0,victimAdvocate:0,appeal:0}
+    ]},
+  results:{totalDisposed:642,totalNoJail:616,totalDismissed:207,totalPTI:45,totalIncarc:26,
+    degrees:[
+      {label:"1st Degree",charge:"Up to Life",total:6,noJail:5,dismissed:1,pti:0,incarc:0},
+      {label:"2nd Degree",charge:"5-10 Years",total:29,noJail:13,dismissed:5,pti:6,incarc:5},
+      {label:"3rd Degree",charge:"3-5 Years",total:30,noJail:11,dismissed:7,pti:10,incarc:2},
+      {label:"4th Degree",charge:"Up to 18 Months",total:5,noJail:1,dismissed:1,pti:2,incarc:1},
+      {label:"Disorderly",charge:"90-180 Days Jail",total:114,noJail:114,dismissed:74,pti:4,incarc:0},
+      {label:"DUI/DWI",charge:"License/Fines",total:69,noJail:60,dismissed:8,pti:1,incarc:0},
+      {label:"Restraining",charge:"Civil Exposure",total:91,noJail:91,dismissed:58,pti:0,incarc:0}
+    ]},
+  profitability:[
+    {name:"Indictable",cases:188,avgFee:28123,avgHrs:37,hrsMo:7,feeHr:762,avgDays:159},
+    {name:"Investigation",cases:41,avgFee:21195,avgHrs:10,hrsMo:2.5,feeHr:2158,avgDays:120},
+    {name:"DUI/DWI",cases:69,avgFee:8261,avgHrs:12,hrsMo:2.4,feeHr:698,avgDays:150},
+    {name:"Disorderly",cases:110,avgFee:8195,avgHrs:8,hrsMo:2.2,feeHr:1091,avgDays:102},
+    {name:"Restraining",cases:111,avgFee:8054,avgHrs:17,hrsMo:9.2,feeHr:470,avgDays:56},
+    {name:"Motor Vehicle",cases:27,avgFee:4222,avgHrs:8,hrsMo:3.3,feeHr:516,avgDays:75},
+    {name:"Juvenile",cases:14,avgFee:13679,avgHrs:19,hrsMo:4.6,feeHr:732,avgDays:121},
+    {name:"Expungement",cases:14,avgFee:571,avgHrs:1,hrsMo:0.1,feeHr:755,avgDays:154},
+    {name:"Other",cases:68,avgFee:9993,avgHrs:6,hrsMo:2.6,feeHr:1763,avgDays:66}
+  ]
+};
 
 // June 2, 2026 accurate case counts from Krystan's report
 // These override Clio attorney case counts which are less accurate
@@ -602,6 +660,13 @@ function buildBars(cId,data,labels,strLine,color){
 
 function loadData(){
   var bar=el('dataBar'),txt=el('dataBarText');
+
+  // Render immediately with cached/fallback data so app is never blank
+  if(LIVE_DATA){renderDashboard(LIVE_DATA);}
+
+  bar.style.color='var(--muted)';
+  txt.innerHTML='<span class="pulse">●</span> Loading live data...';
+
   fetch(DATA_URL+'?t='+Date.now())
     .then(function(r){return r.json();})
     .then(function(d){
@@ -612,9 +677,9 @@ function loadData(){
       var ts=d.lastUpdated?new Date(d.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'unknown';
       txt.textContent='Live · Updated '+ts;
     })
-    .catch(function(err){
+    .catch(function(){
       bar.style.color='var(--red2)';
-      txt.textContent='Could not load data — tap to retry';
+      txt.textContent='Offline — showing cached data · tap to retry';
       bar.onclick=loadData;bar.style.cursor='pointer';
     });
 }
