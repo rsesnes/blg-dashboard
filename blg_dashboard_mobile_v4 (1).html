@@ -284,18 +284,12 @@ body{font-family:-apple-system,'SF Pro Display','Segoe UI',system-ui,sans-serif;
 </div>
 </div>
 <script>
-var DATA_URL = "https://raw.githubusercontent.com/rsesnes/blg-dashboard/main/blg_data.json";
+var DATA_URL="https://raw.githubusercontent.com/rsesnes/blg-dashboard/main/blg_data.json";
 
-// Fallback data — renders immediately while live fetch loads
-// Based on last known good data (June 15, 2026)
-var LIVE_DATA = {
-  lastUpdated:"2026-06-15",
-  curMonth:6, curQuarter:2,
-  jan:{nm:244100,ar:34288.67}, feb:{nm:135750,ar:68026.88},
-  mar:{nm:370088,ar:33982.69}, apr:{nm:258250,ar:33927.88},
-  may:{nm:230375,ar:17197.15}, jun:{nm:105000,ar:33592.06},
-  jul:{nm:0,ar:0}, aug:{nm:0,ar:0}, sep:{nm:0,ar:0},
-  oct:{nm:0,ar:0}, nov:{nm:0,ar:0}, dec:{nm:0,ar:0},
+var LIVE_DATA={lastUpdated:"2026-06-15",curMonth:6,curQuarter:2,
+  jan:{nm:244100,ar:34288.67},feb:{nm:135750,ar:68026.88},mar:{nm:370088,ar:33982.69},
+  apr:{nm:258250,ar:33927.88},may:{nm:230375,ar:17197.15},jun:{nm:105000,ar:33592.06},
+  jul:{nm:0,ar:0},aug:{nm:0,ar:0},sep:{nm:0,ar:0},oct:{nm:0,ar:0},nov:{nm:0,ar:0},dec:{nm:0,ar:0},
   weeks:[93250,46500,37250,81250,106125,20000,32500,71750,48500,56500,0,0],
   weekLabels:{w1:"Wk13 Apr 1-7",w2:"Wk14 Apr 8-14",w3:"Wk15 Apr 15-21",w4:"Wk16 Apr 22-30",w5:"Wk17 May 1-7",w6:"Wk18 May 8-14",w7:"Wk19 May 15-21",w8:"Wk20 May 22-31",w9:"Wk21 Jun 1-7",w10:"Wk22 Jun 8-14",w11:"Wk23 Jun 15-21",w12:"Wk24 Jun 22-30"},
   leads:{total:212,booked:71,completed:67,signed:6,newClients:6},
@@ -306,16 +300,15 @@ var LIVE_DATA = {
     {name:"Bianchi SEO",leads:18,ret:2},{name:"Facebook",leads:3,ret:0},
     {name:"Referral",leads:2,ret:0},{name:"Prior Client",leads:0,ret:0},{name:"Other",leads:0,ret:0}
   ],
-  calls:{total:286,qualified:11,unqualified:12,unrated:263,
-    sources:[
-      {name:"Google LSA",total:107,qualified:5,unqualified:6,unrated:96},
-      {name:"Google My Business",total:109,qualified:3,unqualified:2,unrated:104},
-      {name:"Bianchi SEO",total:32,qualified:1,unqualified:0,unrated:31},
-      {name:"Google Criminal",total:31,qualified:2,unqualified:3,unrated:26},
-      {name:"Facebook",total:3,qualified:0,unqualified:0,unrated:3},
-      {name:"Social",total:1,qualified:0,unqualified:0,unrated:1},
-      {name:"MasterClass",total:2,qualified:0,unqualified:0,unrated:2}
-    ]},
+  calls:{total:286,qualified:11,unqualified:12,unrated:263,sources:[
+    {name:"Google LSA",total:107,qualified:5,unqualified:6,unrated:96},
+    {name:"Google My Business",total:109,qualified:3,unqualified:2,unrated:104},
+    {name:"Bianchi SEO",total:32,qualified:1,unqualified:0,unrated:31},
+    {name:"Google Criminal",total:31,qualified:2,unqualified:3,unrated:26},
+    {name:"Facebook",total:3,qualified:0,unqualified:0,unrated:3},
+    {name:"Social",total:1,qualified:0,unqualified:0,unrated:1},
+    {name:"MasterClass",total:2,qualified:0,unqualified:0,unrated:2}
+  ]},
   attorneys:{totalCases:143,portfolioValue:1405000,annualRevenue:754000,billableHours:384.45,updated:"Jun 2, 2026",
     list:[
       {name:"Christopher Eaton",short:"Eaton",cases:29,casesYTD:21,portfolio:443000,annual:0,hours:94.9,indictable:14,dui:5,disorderly:1,mvt:0,dvro:2,investigation:5,juvenile:1,federal:0,victimAdvocate:0,appeal:0},
@@ -346,130 +339,19 @@ var LIVE_DATA = {
   ]
 };
 
-// June 2, 2026 accurate case counts from Krystan's report
-// These override Clio attorney case counts which are less accurate
-var CASELOAD_OVERRIDE = {
-  reportDate: "2026-06-02",
-  attorneys: {
-    ce: {name:"Christopher Eaton", cases:29, indictable:14, disorderly:1, investigation:5, restraining:2, dui:5, mvt:0, juvenile:1, terpo:1, federal:0, other:0, openedLast30:7, closedLast30:6, openedLast90:16, closedLast90:17, ytdOpened:21, ytdClosed:19},
-    de: {name:"Danielle Esposito",  cases:33, indictable:18, disorderly:4, investigation:5, restraining:0, dui:1, mvt:0, juvenile:4, terpo:1, federal:0, other:0, openedLast30:3, closedLast30:1, openedLast90:9,  closedLast90:3,  ytdOpened:18, ytdClosed:8},
-    pd: {name:"Paul Di Lella",      cases:31, indictable:16, disorderly:5, investigation:7, restraining:0, dui:0, mvt:0, juvenile:0, terpo:1, federal:1, other:1, openedLast30:2, closedLast30:5, openedLast90:9,  closedLast90:14, ytdOpened:19, ytdClosed:23},
-    tm: {name:"Tricia Margolis",    cases:50, indictable:1,  disorderly:25,investigation:0, restraining:0, dui:16,mvt:8, juvenile:0, terpo:0, federal:0, other:0, openedLast30:10,closedLast30:4, openedLast90:31, closedLast90:26, ytdOpened:59, ytdClosed:38}
-  },
-  weeklyHours: [
-    {weekStart:"2026-05-25", esposito:11.84, eaton:16.43, dilella:8.25,  margolis:16.8},
-    {weekStart:"2026-05-18", esposito:29.31, eaton:31.99, dilella:13.3,  margolis:11.6},
-    {weekStart:"2026-05-11", esposito:22.94, eaton:14.45, dilella:11.35, margolis:5.1},
-    {weekStart:"2026-05-04", esposito:27.25, eaton:30.4,  dilella:21.2,  margolis:14.3},
-    {weekStart:"2026-04-27", esposito:35.5,  eaton:27.64, dilella:24.4,  margolis:23.9},
-    {weekStart:"2026-04-20", esposito:33.07, eaton:17.23, dilella:21.55, margolis:17.3},
-    {weekStart:"2026-04-13", esposito:32.65, eaton:15.64, dilella:26.9,  margolis:29.7},
-    {weekStart:"2026-04-06", esposito:39.26, eaton:22.11, dilella:22.35, margolis:8.6},
-    {weekStart:"2026-03-30", esposito:33.33, eaton:26.66, dilella:28.0,  margolis:18.2},
-    {weekStart:"2026-03-23", esposito:42.45, eaton:21.03, dilella:14.09, margolis:25.6},
-    {weekStart:"2026-03-16", esposito:26.90, eaton:32.05, dilella:12.95, margolis:25.9},
-    {weekStart:"2026-03-09", esposito:20.63, eaton:9.21,  dilella:16.45, margolis:24.74},
-    {weekStart:"2026-03-02", esposito:25.56, eaton:23.35, dilella:31.35, margolis:25.85}
-  ]
-};
-
 var BREAKEVEN=240000,STRETCH=340000,ANNUAL_GOAL=4080000,WKBE=55000,WKSTR=85000;
 var QTR_NAMES=['','Q1','Q2','Q3','Q4'];
 var MO_NAMES=['','January','February','March','April','May','June','July','August','September','October','November','December'];
 var MO_SHORT=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var ATTY_COLORS=['#f97316','#06b6d4','#a855f7','#22c55e'];
-var SRC_NAME_MAP={lsa:'Google LSA',gmb:'GMB (All)',gcrim:'Google Crim.',web:'Website',seo:'Bianchi SEO',fb:'Facebook',ref:'Referral',prior:'Prior Client',other:'Other'};
-var CALL_KEY_MAP={lsa:'Google LSA',gmb:'Google My Business',gcrim:'Google Criminal',seo:'Bianchi SEO',web:'Website',fb:'Facebook',social:'Social',masterclass:'MasterClass',other:'Other'};
-var PA_NAMES={indictable:'Indictable',investigation:'Investigation',dui:'DUI/DWI',disorderly:'Disorderly',restraining:'Restraining',mvt:'Motor Vehicle',juvenile:'Juvenile',expungement:'Expungement',other:'Other'};
-var ATTY_KEY_MAP={ce:'Christopher Eaton',de:'Danielle Esposito',pd:'Paul Di Lella',tm:'Tricia Margolis'};
-var ATTY_SHORT_MAP={ce:'Eaton',de:'Esposito',pd:'Di Lella',tm:'Margolis'};
 
 function fmt(v){return '$'+Math.round(v).toLocaleString();}
-function fmtSigned(v){return (v>=0?'+':'-')+'$'+Math.abs(Math.round(v)).toLocaleString();}
+function fmtS(v){return (v>=0?'+':'-')+'$'+Math.abs(Math.round(v)).toLocaleString();}
 function pct(a,b){return b>0?Math.round(a/b*100)+'%':'0%';}
 function el(id){return document.getElementById(id);}
-
-// ── NORMALIZE: handles both dashboard HTML format AND blg_data.json format
-function normalizeData(D) {
-  var N = JSON.parse(JSON.stringify(D)); // deep copy
-
-  // Normalize weeks: object {w1,w2...} → array
-  if (N.weeks && !Array.isArray(N.weeks)) {
-    N.weeks = [N.weeks.w1||0,N.weeks.w2||0,N.weeks.w3||0,N.weeks.w4||0,N.weeks.w6||0,N.weeks.w6||0,N.weeks.w7||0,N.weeks.w8||0,N.weeks.w9||0,N.weeks.w10||0,N.weeks.w11||0,N.weeks.w12||0];
-  }
-
-  // Normalize weekLabels: object → array
-  if (N.weekLabels && !Array.isArray(N.weekLabels)) {
-    N._wkLabels = [N.weekLabels.w1,N.weekLabels.w2,N.weekLabels.w3,N.weekLabels.w4,N.weekLabels.w5,N.weekLabels.w6,N.weekLabels.w7,N.weekLabels.w8,N.weekLabels.w9,N.weekLabels.w10,N.weekLabels.w11,N.weekLabels.w12];
-  } else {
-    N._wkLabels = N.weekLabels || [];
-  }
-
-  // Normalize sources: object {lsa:{leads,retained}} → array [{name,leads,ret}]
-  if (N.sources && !Array.isArray(N.sources)) {
-    var srcArr = [];
-    Object.keys(SRC_NAME_MAP).forEach(function(k){
-      var s = N.sources[k]||{leads:0,retained:0};
-      srcArr.push({name:SRC_NAME_MAP[k], leads:s.leads||0, ret:s.retained||0});
-    });
-    N.sources = srcArr;
-  }
-
-  // Normalize calls: {lsa:{total...}} → {sources:[...], total, qualified, unqualified, unrated}
-  if (N.calls && !N.calls.sources) {
-    var callSrcs = [];
-    Object.keys(CALL_KEY_MAP).forEach(function(k){
-      var s = N.calls[k]||{total:0,qualified:0,unqualified:0,unrated:0};
-      if(s.total>0) callSrcs.push({name:CALL_KEY_MAP[k],total:s.total||0,qualified:s.qualified||0,unqualified:s.unqualified||0,unrated:s.unrated||0});
-    });
-    N.calls.sources = callSrcs;
-  }
-
-  // Normalize attorneys: {ce:{activeCases...}} → {list:[{name,cases...}]}
-  if (N.attorneys && !N.attorneys.list) {
-    var attyList = [];
-    ['ce','de','pd','tm'].forEach(function(k,i){
-      var a = N.attorneys[k]||{};
-      attyList.push({
-        name:ATTY_KEY_MAP[k], short:ATTY_SHORT_MAP[k],
-        cases:a.activeCases||0, casesYTD:a.casesYTD||0,
-        portfolio:a.portfolioValue||0, annual:a.annualRevenue||0,
-        hours:a.billableHours||0,
-        indictable:a.indictable||0, dui:a.dui||0, disorderly:a.disorderly||0,
-        mvt:a.mvt||0, dvro:a.dvro||0, investigation:a.investigation||0,
-        juvenile:a.juvenile||0, federal:a.federal||0,
-        victimAdvocate:a.victimAdvocate||0, appeal:a.appeal||0
-      });
-    });
-    N.attorneys.list = attyList;
-  }
-
-  // Normalize results: historic.deg/pa → results.degrees + profitability
-  if (!N.results && N.historic) {
-    var R = N.historic;
-    N.results = {
-      totalDisposed: R.totalDisposed||0, totalNoJail: R.totalNoJail||0,
-      totalDismissed: R.totalDismissed||0, totalPTI: R.totalPTI||0, totalIncarc: R.totalIncarc||0
-    };
-    if (R.deg) {
-      var degMap = {deg1:'1st Degree',deg2:'2nd Degree',deg3:'3rd Degree',deg4:'4th Degree',degDP:'Disorderly',degDUI:'DUI/DWI',degRO:'Restraining'};
-      var chargeMap = {deg1:'Up to Life',deg2:'5-10 Years',deg3:'3-5 Years',deg4:'Up to 18 Months',degDP:'90-180 Days Jail',degDUI:'License/Fines',degRO:'Civil Exposure'};
-      N.results.degrees = Object.keys(degMap).map(function(k){
-        var d = R.deg[k]||{total:0,noJail:0,dismissed:0,pti:0,incarc:0};
-        return {label:degMap[k],charge:chargeMap[k],total:d.total||0,noJail:d.noJail||0,dismissed:d.dismissed||0,pti:d.pti||0,incarc:d.incarc||0};
-      });
-    }
-    if (R.pa && !N.profitability) {
-      N.profitability = Object.keys(PA_NAMES).map(function(k){
-        var p = R.pa[k];
-        if(!p||!p.cases) return null;
-        return {name:PA_NAMES[k],cases:p.cases,avgFee:p.avgFee,avgHrs:p.avgHrs,hrsMo:p.hrsPerMonth,feeHr:p.feePerHr,avgDays:p.avgDays};
-      }).filter(Boolean);
-    }
-  }
-
-  return N;
-}
+function srRow(l,v){return '<div class="sr"><div class="sr-label">'+l+'</div><div class="sr-val">'+v+'</div></div>';}
+function srDiv(l,v){return '<div class="sr sr-div"><div class="sr-label">'+l+'</div><div class="sr-val">'+v+'</div></div>';}
+function srC(l,v,c){return '<div class="sr"><div class="sr-label">'+l+'</div><div class="sr-val" style="color:'+c+'">'+v+'</div></div>';}
 
 function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
@@ -480,396 +362,332 @@ function switchTab(name,btn){
   btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 }
 
-function buildBars(cId,data,labels,strLine,color){
-  var c=el(cId);if(!c)return;
-  c.innerHTML='';
-  var actData=data.filter(function(v){return v>0;});
-  var mx=actData.length>0?Math.max.apply(null,actData):1;
-  var lastActive=data.reduce(function(a,v,i){return v>0?i:a;},-1);
-  data.forEach(function(v,i){
+function bars(id,vals,lbls,str,col){
+  var c=el(id);if(!c)return;c.innerHTML='';
+  var act=vals.filter(function(v){return v>0;});
+  var mx=act.length?Math.max.apply(null,act):1;
+  var last=vals.reduce(function(a,v,i){return v>0?i:a;},-1);
+  vals.forEach(function(v,i){
     var p=v>0?Math.max(Math.round(v/mx*100),2):1;
-    var isFuture=v===0,isCur=i===lastActive;
-    var col=color||(isFuture?'rgba(255,255,255,.04)':isCur?'#3b82f6':v>=(strLine||0)?'#22c55e':'#7f1d1d');
-    if(isFuture)col='rgba(255,255,255,.04)';
+    var fut=v===0,cur=i===last;
+    var bg=col||(fut?'rgba(255,255,255,.04)':cur?'#3b82f6':v>=(str||0)?'#22c55e':'#7f1d1d');
+    if(fut)bg='rgba(255,255,255,.04)';
     var w=document.createElement('div');w.className='bar-wrap';
-    var vd=document.createElement('div');vd.className='bar-val';vd.textContent=isFuture?'':(v>1000?'$'+Math.round(v/1000)+'K':v);
-    var b=document.createElement('div');b.className='bar';b.style.cssText='height:'+p+'%;background:'+col+';width:100%';
-    var l=document.createElement('div');l.className='bar-lbl';l.textContent=(labels&&labels[i])||'';
+    var vd=document.createElement('div');vd.className='bar-val';
+    vd.textContent=fut?'':(v>1000?'$'+Math.round(v/1000)+'K':v);
+    var b=document.createElement('div');b.className='bar';
+    b.style.cssText='height:'+p+'%;background:'+bg+';width:100%';
+    var l=document.createElement('div');l.className='bar-lbl';
+    l.textContent=(lbls&&lbls[i])||'';
     w.appendChild(vd);w.appendChild(b);w.appendChild(l);c.appendChild(w);
   });
 }
 
+function normalize(D){
+  var N=JSON.parse(JSON.stringify(D));
+  // weeks object -> array
+  if(N.weeks&&!Array.isArray(N.weeks)){
+    N.weeks=[N.weeks.w1||0,N.weeks.w2||0,N.weeks.w3||0,N.weeks.w4||0,N.weeks.w5||0,N.weeks.w6||0,N.weeks.w7||0,N.weeks.w8||0,N.weeks.w9||0,N.weeks.w10||0,N.weeks.w11||0,N.weeks.w12||0];
+  }
+  // weekLabels object -> array
+  if(N.weekLabels&&!Array.isArray(N.weekLabels)){
+    N._wkL=[N.weekLabels.w1,N.weekLabels.w2,N.weekLabels.w3,N.weekLabels.w4,N.weekLabels.w5,N.weekLabels.w6,N.weekLabels.w7,N.weekLabels.w8,N.weekLabels.w9,N.weekLabels.w10,N.weekLabels.w11,N.weekLabels.w12];
+  } else { N._wkL=N.weekLabels||[]; }
+  // sources object -> array
+  var SN={lsa:'Google LSA',gmb:'GMB (All)',gcrim:'Google Criminal',web:'Website',seo:'Bianchi SEO',fb:'Facebook',ref:'Referral',prior:'Prior Client',other:'Other'};
+  if(N.sources&&!Array.isArray(N.sources)){
+    N.sources=Object.keys(SN).map(function(k){var s=N.sources[k]||{};return {name:SN[k],leads:s.leads||0,ret:s.retained||0};});
+  }
+  // calls sources -> array
+  var CN={lsa:'Google LSA',gmb:'Google My Business',gcrim:'Google Criminal',seo:'Bianchi SEO',web:'Website',fb:'Facebook',social:'Social',masterclass:'MasterClass',other:'Other'};
+  if(N.calls&&!N.calls.sources){
+    N.calls.sources=Object.keys(CN).map(function(k){var s=N.calls[k]||{};return {name:CN[k],total:s.total||0,qualified:s.qualified||0,unqualified:s.unqualified||0,unrated:s.unrated||0};}).filter(function(s){return s.total>0;});
+  }
+  // attorneys {ce,de,pd,tm} -> list array
+  var AK=['ce','de','pd','tm'],AN={ce:'Christopher Eaton',de:'Danielle Esposito',pd:'Paul Di Lella',tm:'Tricia Margolis'},AS={ce:'Eaton',de:'Esposito',pd:'Di Lella',tm:'Margolis'};
+  if(N.attorneys&&!N.attorneys.list){
+    N.attorneys.list=AK.map(function(k,i){var a=N.attorneys[k]||{};return {name:AN[k],short:AS[k],cases:a.activeCases||0,casesYTD:a.casesYTD||0,portfolio:a.portfolioValue||0,annual:a.annualRevenue||0,hours:a.billableHours||0,indictable:a.indictable||0,dui:a.dui||0,disorderly:a.disorderly||0,mvt:a.mvt||0,dvro:a.dvro||0,investigation:a.investigation||0,juvenile:a.juvenile||0,federal:a.federal||0,victimAdvocate:0,appeal:0};});
+  }
+  // historic -> results + profitability
+  if(!N.results&&N.historic){
+    var H=N.historic;
+    N.results={totalDisposed:H.totalDisposed||0,totalNoJail:H.totalNoJail||0,totalDismissed:H.totalDismissed||0,totalPTI:H.totalPTI||0,totalIncarc:H.totalIncarc||0,degrees:[]};
+    var DM={deg1:'1st Degree',deg2:'2nd Degree',deg3:'3rd Degree',deg4:'4th Degree',degDP:'Disorderly',degDUI:'DUI/DWI',degRO:'Restraining'};
+    var DC={deg1:'Up to Life',deg2:'5-10 Years',deg3:'3-5 Years',deg4:'Up to 18 Months',degDP:'90-180 Days Jail',degDUI:'License/Fines',degRO:'Civil Exposure'};
+    if(H.deg){N.results.degrees=Object.keys(DM).map(function(k){var d=H.deg[k]||{};return {label:DM[k],charge:DC[k],total:d.total||0,noJail:d.noJail||0,dismissed:d.dismissed||0,pti:d.pti||0,incarc:d.incarceration||d.incarc||0};});}
+    if(H.pa&&!N.profitability){var PN={indictable:'Indictable',investigation:'Investigation',dui:'DUI/DWI',disorderly:'Disorderly',restraining:'Restraining',mvt:'Motor Vehicle',juvenile:'Juvenile',expungement:'Expungement',other:'Other'};N.profitability=Object.keys(PN).map(function(k){var p=H.pa[k];if(!p||!p.cases)return null;return {name:PN[k],cases:p.cases,avgFee:p.avgFee,avgHrs:p.avgHrs,hrsMo:p.hrsPerMonth,feeHr:p.feePerHr,avgDays:p.avgDays};}).filter(Boolean);}
+  }
+  return N;
+}
+
 function loadData(){
   var bar=el('dataBar'),txt=el('dataBarText');
-
-  // Render immediately with cached/fallback data so app is never blank
-  if(LIVE_DATA){renderDashboard(LIVE_DATA);}
-
+  renderDashboard(LIVE_DATA);
   bar.style.color='var(--muted)';
-  txt.innerHTML='<span class="pulse">●</span> Loading live data...';
-
+  txt.innerHTML='<span class="pulse">\u25cf</span> Fetching live data...';
   fetch(DATA_URL+'?t='+Date.now())
     .then(function(r){return r.json();})
     .then(function(d){
-      var N=normalizeData(d);
-      LIVE_DATA=N;
-      renderDashboard(N);
+      renderDashboard(normalize(d));
       bar.style.background='rgba(34,197,94,.1)';bar.style.borderColor='rgba(34,197,94,.2)';bar.style.color='var(--green2)';
       var ts=d.lastUpdated?new Date(d.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'unknown';
-      txt.textContent='Live · Updated '+ts;
+      txt.textContent='Live \u00b7 Updated '+ts;
     })
     .catch(function(){
-      bar.style.color='var(--red2)';
-      txt.textContent='Offline — showing cached data · tap to retry';
+      bar.style.color='var(--muted)';
+      txt.textContent='Cached data \u00b7 tap to refresh';
       bar.onclick=loadData;bar.style.cursor='pointer';
     });
 }
 
 function renderDashboard(D){
-  var _section = 'init';
-  try {
-  var wkArr=Array.isArray(D.weeks)?D.weeks:[D.weeks.w1||0,D.weeks.w2||0,D.weeks.w3||0,D.weeks.w4||0,D.weeks.w5||0,D.weeks.w6||0,D.weeks.w7||0,D.weeks.w8||0,D.weeks.w9||0,D.weeks.w10||0,D.weeks.w11||0,D.weeks.w12||0];
-  var wkLabels=D._wkLabels||[];
-  var wkShort=wkLabels.map(function(l){return l?l.split(' ')[0]:'';});
+  var wk=Array.isArray(D.weeks)?D.weeks:[D.weeks.w1||0,D.weeks.w2||0,D.weeks.w3||0,D.weeks.w4||0,D.weeks.w5||0,D.weeks.w6||0,D.weeks.w7||0,D.weeks.w8||0,D.weeks.w9||0,D.weeks.w10||0,D.weeks.w11||0,D.weeks.w12||0];
+  var wkL=D._wkL||(Array.isArray(D.weekLabels)?D.weekLabels:[D.weekLabels.w1,D.weekLabels.w2,D.weekLabels.w3,D.weekLabels.w4,D.weekLabels.w5,D.weekLabels.w6,D.weekLabels.w7,D.weekLabels.w8,D.weekLabels.w9,D.weekLabels.w10,D.weekLabels.w11,D.weekLabels.w12]);
+  var wkS=wkL.map(function(l){return l?l.split(' ')[0]:'';});
+  var MO=[null,D.jan,D.feb,D.mar,D.apr,D.may,D.jun,D.jul,D.aug,D.sep,D.oct,D.nov,D.dec];
+  var cm=D.curMonth||1,cq=D.curQuarter||1;
+  var cmd=MO[cm]||{nm:0,ar:0};
+  var nm=cmd.nm||0,ar=cmd.ar||0,tot=nm+ar;
+  var vBE=tot-BREAKEVEN,vST=tot-STRETCH;
+  var qs=(cq-1)*3+1;
+  var qm=[MO[qs]||{nm:0,ar:0},MO[qs+1]||{nm:0,ar:0},MO[qs+2]||{nm:0,ar:0}];
+  var qT=qm.reduce(function(s,m){return s+(m.nm||0)+(m.ar||0);},0);
+  var all=[D.jan,D.feb,D.mar,D.apr,D.may,D.jun,D.jul,D.aug,D.sep,D.oct,D.nov,D.dec];
+  var ytd=all.reduce(function(s,m){return s+(m?(m.nm||0)+(m.ar||0):0);},0);
+  var ap=Math.round(ytd/ANNUAL_GOAL*100);
+  var nc=D.leads.signed||D.leads.newClients||0;
+  var aList=(D.attorneys&&D.attorneys.list)||[];
 
-  var ALL=[null,D.jan,D.feb,D.mar,D.apr,D.may,D.jun,D.jul,D.aug,D.sep,D.oct,D.nov,D.dec];
-  var curMo=D.curMonth||1, curQ=D.curQuarter||1;
-  var curMoData=ALL[curMo]||{nm:0,ar:0};
-  var curNM=curMoData.nm||0, curAR=curMoData.ar||0;
-
-  // Fallback: if monthly NM=0 but weekly data exists for current month,
-  // calculate NM from weekly tracker (Q2: Apr=w1-4, May=w5-8, Jun=w9-12)
-  if(curNM===0 && wkArr.some(function(v){return v>0;})) {
-    var wkMonthMap={1:[0,1,2,3],2:[4,5,6,7],3:[8,9,10,11]}; // Q month index → week indices
-    var qMonthIdx=(curMo-1)%3+1; // 1=first of Q, 2=second, 3=third
-    var wkIndices=wkMonthMap[qMonthIdx]||[];
-    var wkSum=wkIndices.reduce(function(s,i){return s+(wkArr[i]||0);},0);
-    if(wkSum>0){curNM=wkSum;}
-  }
-  var curMonth=MO_NAMES[curMo];
-  var curTotal=curNM+curAR, vsBE=curTotal-BREAKEVEN, vsSTR=curTotal-STRETCH;
-  var qStart=(curQ-1)*3+1;
-  var qMonths=[ALL[qStart]||{nm:0,ar:0},ALL[qStart+1]||{nm:0,ar:0},ALL[qStart+2]||{nm:0,ar:0}];
-  var qTotal=qMonths.reduce(function(s,m){return s+(m.nm||0)+(m.ar||0);},0);
-  var allMonths=[D.jan,D.feb,D.mar,D.apr,D.may,D.jun,D.jul,D.aug,D.sep,D.oct,D.nov,D.dec];
-  var ytdTotal=allMonths.reduce(function(s,m){return s+(m?m.nm||0:0)+(m?m.ar||0:0);},0);
-  var annualPct=Math.round(ytdTotal/ANNUAL_GOAL*100);
-  var newClients=D.leads.signed||D.leads.newClients||0;
-  // Merge CaseLoad_OVERRIDE into attorney list for accurate case counts
-  var attyList=D.attorneys.list||[];
-  if(CASELOAD_OVERRIDE && CASELOAD_OVERRIDE.attorneys) {
-    var clKeys=['ce','de','pd','tm'];
-    var clColors=['#f97316','#06b6d4','#a855f7','#22c55e'];
-    var clShorts={ce:'Eaton',de:'Esposito',pd:'Di Lella',tm:'Margolis'};
-    attyList = clKeys.map(function(k,i){
-      var cl=CASELOAD_OVERRIDE.attorneys[k];
-      // Find matching Clio attorney for portfolio/revenue/hours
-      var clio=(D.attorneys.list||[]).filter(function(a){
-        return a.name&&a.name.toLowerCase().indexOf(cl.name.split(' ')[1].toLowerCase())>=0;
-      })[0]||{};
-      return {
-        name:cl.name, short:clShorts[k], color:clColors[i],
-        cases:cl.cases, casesYTD:cl.ytdOpened||clio.casesYTD||0,
-        portfolio:clio.portfolio||0, annual:clio.annual||0,
-        hours:clio.hours||0,
-        indictable:cl.indictable||0, dui:cl.dui||0, disorderly:cl.disorderly||0,
-        mvt:cl.mvt||0, dvro:cl.restraining||0, investigation:cl.investigation||0,
-        juvenile:cl.juvenile||0, federal:cl.federal||0,
-        victimAdvocate:0, appeal:0,
-        openedLast30:cl.openedLast30||0, closedLast30:cl.closedLast30||0,
-        openedLast90:cl.openedLast90||0, closedLast90:cl.closedLast90||0
-      };
-    });
+  // Fallback: calculate NM from weekly data if monthly is 0
+  if(nm===0){
+    var wkMap={1:[0,1,2,3],2:[4,5,6,7],3:[8,9,10,11]};
+    var qi=(cm-1)%3+1;
+    var wi=wkMap[qi]||[];
+    var ws=wi.reduce(function(s,i){return s+(wk[i]||0);},0);
+    if(ws>0)nm=ws;
+    tot=nm+ar;vBE=tot-BREAKEVEN;vST=tot-STRETCH;
   }
 
-  _section='header';
-  el('hdr-qtr').textContent=QTR_NAMES[curQ]+' 2026 Live';
+  el('hdr-qtr').textContent=QTR_NAMES[cq]+' 2026 Live';
 
-  // ── ALERT
-  var isNewMonth=(curNM===0&&curAR===0);
-  if(isNewMonth){
-    var prevTotal=(ALL[curMo-1]||{nm:0,ar:0}).nm+(ALL[curMo-1]||{nm:0,ar:0}).ar;
-    _section='alert';
-  el('alertText').innerHTML='<strong>'+curMonth+' MTD: $0</strong> — '+MO_NAMES[curMo-1]+' closed at <span class="alert-good">'+fmt(prevTotal)+'</span>';
-  } else if(vsBE<0){
-    el('alertText').innerHTML='<strong>'+curMonth+' total '+fmt(curTotal)+'</strong> is <span class="alert-diff">'+fmt(Math.abs(vsBE))+'</span> below $240K breakeven.';
+  // Alert
+  if(nm===0&&ar===0){
+    var pm=(MO[cm-1]||{nm:0,ar:0});var pt=(pm.nm||0)+(pm.ar||0);
+    el('alertText').innerHTML='<strong>'+MO_NAMES[cm]+' MTD: $0</strong> \u2014 '+MO_NAMES[cm-1]+' closed at <span class="alert-good">'+fmt(pt)+'</span>';
+  } else if(vBE<0){
+    el('alertText').innerHTML='<strong>'+MO_NAMES[cm]+' total '+fmt(tot)+'</strong> is <span class="alert-diff">'+fmt(Math.abs(vBE))+'</span> below breakeven.';
   } else {
-    el('alertText').innerHTML='<strong>'+curMonth+' total '+fmt(curTotal)+'</strong> is <span class="alert-good">'+fmt(vsBE)+'</span> above breakeven.';
+    el('alertText').innerHTML='<strong>'+MO_NAMES[cm]+' total '+fmt(tot)+'</strong> is <span class="alert-good">'+fmt(vBE)+'</span> above breakeven.';
   }
 
-  // ── REVENUE KPIs
-  _section='revenue-kpis';
-  el('kpi-nm').textContent=fmt(curNM);
-  el('kpi-ar').textContent=fmt(curAR);
-  el('kpi-total').textContent=curTotal>0?fmt(curTotal):'$0 MTD';
-  el('kpi-annual').textContent=annualPct+'%';
-  el('kpi-nm-pct').textContent=curNM>0?Math.round(curNM/STRETCH*100)+'% of stretch':'0% of stretch';
-  el('kpi-nm-pct').className='kpi-badge '+(curNM>=STRETCH?'badge-green':'badge-red');
+  // Revenue KPIs
+  el('kpi-nm').textContent=fmt(nm);
+  el('kpi-ar').textContent=fmt(ar);
+  el('kpi-total').textContent=tot>0?fmt(tot):'$0 MTD';
+  el('kpi-annual').textContent=ap+'%';
+  el('kpi-nm-pct').textContent=Math.round(nm/STRETCH*100)+'% of stretch';
+  el('kpi-nm-pct').className='kpi-badge '+(nm>=STRETCH?'badge-green':'badge-red');
+  el('kpi-be').textContent=fmtS(vBE);el('kpi-be').style.color=vBE>=0?'var(--green2)':'var(--red2)';
+  el('kpi-str').textContent=fmtS(vST);el('kpi-str').style.color=vST>=0?'var(--green2)':'var(--red2)';
 
-  el('kpi-be').textContent=fmtSigned(vsBE);
-  el('kpi-be').style.color=vsBE>=0?'var(--green2)':'var(--red2)';
-  el('kpi-str').textContent=fmtSigned(vsSTR);
-  el('kpi-str').style.color=vsSTR>=0?'var(--green2)':'var(--red2)';
-
-  // ── DONUT
-  var prevMoTotal=(ALL[curMo-1]||{nm:0,ar:0}).nm+(ALL[curMo-1]||{nm:0,ar:0}).ar;
-  var dp=Math.min(Math.round(curTotal/STRETCH*100),100);
-  _section='donut';
+  // Donut
+  var dp=Math.min(Math.round(tot/STRETCH*100),100);
   el('donut-pct').textContent=dp+'%';
-  el('donut-lbl').innerHTML='<span>'+fmt(curTotal)+'</span>';
-  var fc=displayTotal>=STRETCH?'#22c55e':displayTotal>=BREAKEVEN?'#06b6d4':'#f59e0b';
+  el('donut-lbl').innerHTML='<span>'+fmt(tot)+'</span>';
+  var fc=tot>=STRETCH?'#22c55e':tot>=BREAKEVEN?'#06b6d4':'#f59e0b';
   el('donutRing').style.background='conic-gradient('+fc+' '+dp*3.6+'deg,#1e2235 0deg)';
   var ds=el('donut-status');
-  if(curTotal<BREAKEVEN){ds.className='donut-status status-red';ds.textContent='Below breakeven';}
-  else if(curTotal<STRETCH){ds.className='donut-status status-below';ds.textContent='Above BE, below stretch';}
+  if(tot<BREAKEVEN){ds.className='donut-status status-red';ds.textContent='Below breakeven';}
+  else if(tot<STRETCH){ds.className='donut-status status-below';ds.textContent='Above BE, below stretch';}
   else{ds.className='donut-status status-above';ds.textContent='Above stretch goal!';}
 
-  // ── REVENUE: Recent weeks
-  var activeWks=wkArr.map(function(v,i){return{v:v,i:i};}).filter(function(w){return w.v>0;}).slice(-6);
-  _section='weekly-bars';
-  buildBars('weeklyBars',activeWks.map(function(w){return w.v;}),activeWks.map(function(w){return wkShort[w.i]||('W'+(w.i+1));}),WKSTR,null);
+  // Recent weeks bars
+  var aw=wk.map(function(v,i){return{v:v,i:i};}).filter(function(w){return w.v>0;}).slice(-6);
+  bars('weeklyBars',aw.map(function(w){return w.v;}),aw.map(function(w){return wkS[w.i]||('W'+(w.i+1));}),WKSTR,null);
 
-  // ── REVENUE: Monthly bars for current quarter
-  el('mo-qtr-lbl').textContent=QTR_NAMES[curQ];
-  var moMax=Math.max(STRETCH*1.1,Math.max.apply(null,qMonths.map(function(m){return (m.nm||0)+(m.ar||0);}).concat([1])));
+  // Monthly bars
+  el('mo-qtr-lbl').textContent=QTR_NAMES[cq];
+  var mx=Math.max(STRETCH*1.1,Math.max.apply(null,qm.map(function(m){return (m.nm||0)+(m.ar||0);}).concat([1])));
   var mc=el('monthlyBars');mc.innerHTML='';
-  qMonths.forEach(function(m,i){
-    var tot=(m.nm||0)+(m.ar||0),nmH=Math.round((m.nm||0)/moMax*100),arH=Math.round((m.ar||0)/moMax*100);
-    mc.innerHTML+='<div class="bar-wrap"><div class="bar-val">'+(tot>0?'$'+Math.round(tot/1000)+'K':'')+'</div>'
-      +'<div style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100%;justify-content:center">'
-      +'<div class="bar" style="height:'+Math.max(nmH,1)+'%;background:var(--blue);width:44%;min-height:2px"></div>'
-      +'<div class="bar" style="height:'+Math.max(arH,1)+'%;background:var(--green);width:44%;min-height:2px"></div>'
-      +'</div><div class="bar-lbl">'+MO_SHORT[qStart+i]+'</div></div>';
+  qm.forEach(function(m,i){
+    var t=(m.nm||0)+(m.ar||0),nh=Math.round((m.nm||0)/mx*100),ah=Math.round((m.ar||0)/mx*100);
+    mc.innerHTML+='<div class="bar-wrap"><div class="bar-val">'+(t>0?'$'+Math.round(t/1000)+'K':'')+'</div><div style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100%;justify-content:center"><div class="bar" style="height:'+Math.max(nh,1)+'%;background:var(--blue);width:44%;min-height:2px"></div><div class="bar" style="height:'+Math.max(ah,1)+'%;background:var(--green);width:44%;min-height:2px"></div></div><div class="bar-lbl">'+MO_SHORT[qs+i]+'</div></div>';
   });
 
-  // ── WEEKLY
-  _section='weekly-tab';
-  el('wk-qtr-lbl').textContent=QTR_NAMES[curQ]+' 2026';
-  buildBars('weeklyFullBars',wkArr,wkShort,WKSTR,null);
+  // Weekly tab
+  el('wk-qtr-lbl').textContent=QTR_NAMES[cq]+' 2026';
+  bars('weeklyFullBars',wk,wkS,WKSTR,null);
   var wr=el('weeklyRows');wr.innerHTML='';
-  wkArr.forEach(function(v,i){
-    var lbl=wkLabels[i]||(QTR_NAMES[curQ]+' Wk'+(i+1));
-    if(v===0){wr.innerHTML+='<div class="wk-row"><div class="wk-lbl">'+lbl+'</div><div class="wk-val" style="color:var(--muted);font-style:italic">Pending</div></div>';return;}
-    var dbe=v-WKBE,dstr=v-WKSTR;
-    wr.innerHTML+='<div class="wk-row"><div class="wk-lbl">'+lbl+'</div><div class="wk-val">'+fmt(v)+'</div>'
-      +'<div class="wk-be" style="color:'+(dbe>=0?'var(--green2)':'var(--red2)')+'">'+(dbe>=0?'+':'')+Math.round(dbe/1000)+'K</div>'
-      +'<div class="wk-str" style="color:'+(dstr>=0?'var(--green2)':'var(--red2)')+'">'+(dstr>=0?'+':'')+Math.round(dstr/1000)+'K</div></div>';
+  wk.forEach(function(v,i){
+    var l=wkL[i]||(QTR_NAMES[cq]+' Wk'+(i+1));
+    if(!v){wr.innerHTML+='<div class="wk-row"><div class="wk-lbl">'+l+'</div><div class="wk-val" style="color:var(--muted);font-style:italic">Pending</div></div>';return;}
+    var db=v-WKBE,ds2=v-WKSTR;
+    wr.innerHTML+='<div class="wk-row"><div class="wk-lbl">'+l+'</div><div class="wk-val">'+fmt(v)+'</div><div class="wk-be" style="color:'+(db>=0?'var(--green2)':'var(--red2)')+'">'+(db>=0?'+':'')+Math.round(db/1000)+'K</div><div class="wk-str" style="color:'+(ds2>=0?'var(--green2)':'var(--red2)')+'">'+(ds2>=0?'+':'')+Math.round(ds2/1000)+'K</div></div>';
   });
 
-  // ── LEADS: Funnel
-  _section='leads-funnel';
-  var fStages=[
-    {lbl:'Total Leads',val:D.leads.total,color:'#60a5fa',conv:''},
-    {lbl:'Consults Booked',val:D.leads.booked,color:'#a78bfa',conv:pct(D.leads.booked,D.leads.total)+' of leads'},
-    {lbl:'Consults Completed',val:D.leads.completed,color:'#34d399',conv:pct(D.leads.completed,D.leads.booked)+' of booked'},
-    {lbl:'Retainers Sent',val:null,color:'#4b5563',conv:'Tracking TBD',dim:true},
-    {lbl:'New Clients',val:newClients,color:'#fbbf24',conv:pct(newClients,D.leads.completed)+' of completed'}
-  ];
+  // Leads funnel
+  var fs=[{l:'Total Leads',v:D.leads.total,c:'#60a5fa'},{l:'Consults Booked',v:D.leads.booked,c:'#a78bfa',cv:pct(D.leads.booked,D.leads.total)+' of leads'},{l:'Consults Completed',v:D.leads.completed,c:'#34d399',cv:pct(D.leads.completed,D.leads.booked)+' of booked'},{l:'Retainers Sent',v:null,c:'#4b5563',cv:'Tracking TBD',dim:true},{l:'New Clients',v:nc,c:'#fbbf24',cv:pct(nc,D.leads.completed)+' of completed'}];
   var fe=el('funnelEl');fe.innerHTML='';
-  fStages.forEach(function(s){fe.innerHTML+='<div class="fs'+(s.dim?' dim':'')+'"><div><div class="fs-lbl">'+s.lbl+'</div>'+(s.conv?'<div class="fs-conv">'+s.conv+'</div>':'')+'</div><div class="fs-val" style="color:'+s.color+'">'+(s.val!==null?s.val:'—')+'</div></div>';});
+  fs.forEach(function(s){fe.innerHTML+='<div class="fs'+(s.dim?' dim':'')+'"><div><div class="fs-lbl">'+s.l+'</div>'+(s.cv?'<div class="fs-conv">'+s.cv+'</div>':'')+'</div><div class="fs-val" style="color:'+s.c+'">'+(s.v!==null?s.v:'—')+'</div></div>';});
 
-  // ── LEADS: Last month confirmed
+  // Last month confirmed
   var lm=D.lastMonth||{};
-  var lmItems=[{lbl:'Total Leads',val:lm.leads||0},{lbl:'Consults Booked',val:lm.booked||0},{lbl:'Consults Done',val:lm.completed||0},{lbl:'New Clients',val:lm.newClients||0},{lbl:'New Clients (FU)',val:lm.newClientsTotal||0}];
-  var ce2=el('confirmedEl');ce2.innerHTML='';
-  lmItems.forEach(function(x){ce2.innerHTML+='<div class="conf-kpi"><div class="ck-val">'+x.val+'</div><div class="ck-lbl">'+x.lbl+'</div></div>';});
+  var lmi=[{l:'Total Leads',v:lm.leads||0},{l:'Consults Booked',v:lm.booked||0},{l:'Consults Done',v:lm.completed||0},{l:'New Clients',v:lm.newClients||0},{l:'New Clients (FU)',v:lm.newClientsTotal||0}];
+  var ce=el('confirmedEl');ce.innerHTML='';
+  lmi.forEach(function(x){ce.innerHTML+='<div class="conf-kpi"><div class="ck-val">'+x.v+'</div><div class="ck-lbl">'+x.l+'</div></div>';});
 
-  // ── LEADS: Source table
-  var srcList=Array.isArray(D.sources)?D.sources:[];
+  // Sources
+  var src=Array.isArray(D.sources)?D.sources:[];
   var sb=el('sourceBody');sb.innerHTML='';
-  var maxL=Math.max.apply(null,srcList.map(function(s){return s.leads;}).concat([1]));
-  var hasSrc=srcList.some(function(s){return s.leads>0;});
-  if(!hasSrc){sb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);font-style:italic;padding:16px">No source data</td></tr>';}
-  else{srcList.forEach(function(s){
+  var mxL=Math.max.apply(null,src.map(function(s){return s.leads;}).concat([1]));
+  src.forEach(function(s){
     if(!s.leads)return;
-    var cv=Math.round(s.ret/s.leads*100),bw=Math.round(s.leads/maxL*100);
+    var cv=Math.round((s.ret||0)/s.leads*100),bw=Math.round(s.leads/mxL*100);
     var cc=cv>=30?'var(--green2)':cv>=15?'var(--gold2)':'var(--red2)';
-    sb.innerHTML+='<tr><td style="font-weight:500">'+s.name+'</td><td>'+s.leads+'</td><td>'+s.ret+'</td><td style="color:'+cc+'">'+cv+'%</td><td><div class="pct-bar-w"><div class="pct-bar" style="width:'+bw+'%"></div></div></td></tr>';
-  });}
+    sb.innerHTML+='<tr><td style="font-weight:500">'+s.name+'</td><td>'+s.leads+'</td><td>'+(s.ret||0)+'</td><td style="color:'+cc+'">'+cv+'%</td><td><div class="pct-bar-w"><div class="pct-bar" style="width:'+bw+'%"></div></div></td></tr>';
+  });
 
-  // ── ANNUAL: Quarter cards
-  _section='annual-quarter';
-  var QTR_DEFS=[{q:1,lbl:'Q1 — Jan/Feb/Mar',months:[D.jan,D.feb,D.mar]},{q:2,lbl:'Q2 — Apr/May/Jun',months:[D.apr,D.may,D.jun]},{q:3,lbl:'Q3 — Jul/Aug/Sep',months:[D.jul,D.aug,D.sep]},{q:4,lbl:'Q4 — Oct/Nov/Dec',months:[D.oct,D.nov,D.dec]}];
+  // Annual quarter cards
+  var QD=[{q:1,l:'Q1 \u2014 Jan/Feb/Mar',m:[D.jan,D.feb,D.mar]},{q:2,l:'Q2 \u2014 Apr/May/Jun',m:[D.apr,D.may,D.jun]},{q:3,l:'Q3 \u2014 Jul/Aug/Sep',m:[D.jul,D.aug,D.sep]},{q:4,l:'Q4 \u2014 Oct/Nov/Dec',m:[D.oct,D.nov,D.dec]}];
   var qg=el('qtrGrid');qg.innerHTML='';
-  QTR_DEFS.forEach(function(qd){
-    var qt=qd.months.reduce(function(s,m){return s+(m?(m.nm||0)+(m.ar||0):0);},0);
-    var isCur=(qd.q===curQ),hasData=qt>0;
-    var qPct=Math.round(qt/ANNUAL_GOAL*100);
-    var card=document.createElement('div');card.className='qtr-card';
-    if(isCur){card.style.borderColor='rgba(59,130,246,.5)';}else if(!hasData){card.style.opacity='0.35';}
-    var extra='';
-    if(isCur){var pd2=qPct-Math.round(curQ/4*100);extra='<div style="font-size:9.5px;margin-top:4px;color:'+(pd2>=0?'var(--green2)':'var(--red2)')+'">'+(pd2>=0?'+':'')+pd2+'% vs annual pace</div>';}
-    card.innerHTML='<div class="qc-label">'+qd.lbl+(isCur?' <span style="font-size:8px;color:var(--blue);font-weight:700">LIVE</span>':'')+'</div><div class="qc-val">'+(hasData?fmt(qt):'-')+'</div><div class="qc-sub">'+(hasData?qPct+'% of annual goal':'No data yet')+'</div>'+extra;
-    qg.appendChild(card);
+  QD.forEach(function(qd){
+    var qt=qd.m.reduce(function(s,m){return s+(m?(m.nm||0)+(m.ar||0):0);},0);
+    var isc=(qd.q===cq),hd=qt>0;
+    var qp=Math.round(qt/ANNUAL_GOAL*100);
+    var cd=document.createElement('div');cd.className='qtr-card';
+    if(isc)cd.style.borderColor='rgba(59,130,246,.5)';else if(!hd)cd.style.opacity='0.35';
+    var ex='';if(isc){var pd=qp-Math.round(cq/4*100);ex='<div style="font-size:9.5px;margin-top:4px;color:'+(pd>=0?'var(--green2)':'var(--red2)')+'">'+(pd>=0?'+':'')+pd+'% vs annual pace</div>';}
+    cd.innerHTML='<div class="qc-label">'+qd.l+(isc?' <span style="font-size:8px;color:var(--blue);font-weight:700">LIVE</span>':'')+'</div><div class="qc-val">'+(hd?fmt(qt):'-')+'</div><div class="qc-sub">'+(hd?qp+'% of annual goal':'No data yet')+'</div>'+ex;
+    qg.appendChild(cd);
   });
 
-  // ── ANNUAL: 12-month bar chart
-  var annVals=allMonths.map(function(m){return m?(m.nm||0)+(m.ar||0):0;});
-  var annMax=Math.max(STRETCH*1.1,Math.max.apply(null,annVals.concat([1])));
+  // Annual bars
+  var av=all.map(function(m){return m?(m.nm||0)+(m.ar||0):0;});
+  var am=Math.max(STRETCH*1.1,Math.max.apply(null,av.concat([1])));
   var ac=el('annualBars');ac.innerHTML='';
-  annVals.forEach(function(v,i){
-    var p=v>0?Math.max(Math.round(v/annMax*100),2):1;
-    var col=v>=STRETCH?'var(--green)':v>0?'var(--blue)':'rgba(255,255,255,.04)';
-    ac.innerHTML+='<div class="bar-wrap"><div class="bar-val">'+(v>0?'$'+Math.round(v/1000)+'K':'')+'</div><div class="bar" style="height:'+p+'%;background:'+col+';width:100%"></div><div class="bar-lbl">'+MO_SHORT[i+1]+'</div></div>';
+  av.forEach(function(v,i){
+    var p=v>0?Math.max(Math.round(v/am*100),2):1;
+    var bg=v>=STRETCH?'var(--green)':v>0?'var(--blue)':'rgba(255,255,255,.04)';
+    ac.innerHTML+='<div class="bar-wrap"><div class="bar-val">'+(v>0?'$'+Math.round(v/1000)+'K':'')+'</div><div class="bar" style="height:'+p+'%;background:'+bg+';width:100%"></div><div class="bar-lbl">'+MO_SHORT[i+1]+'</div></div>';
   });
 
-  // ── QUARTER SUMMARY
-  var q1BE=qTotal-BREAKEVEN*3,q1STR=qTotal-STRETCH*3;
-  var qN=QTR_NAMES[curQ];
-  _section='quarter-summary';
+  // Quarter summary
+  var qBE=qT-BREAKEVEN*3,qST=qT-STRETCH*3,qN=QTR_NAMES[cq];
   var rc=el('revSummaryCard');
   rc.innerHTML='<div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">'+qN+' Revenue Summary</div>'
-    +srRow(MO_SHORT[qStart]+' NM + AR',fmt((qMonths[0].nm||0)+(qMonths[0].ar||0)))
-    +srRow(MO_SHORT[qStart+1]+' NM + AR',fmt((qMonths[1].nm||0)+(qMonths[1].ar||0)))
-    +srRow(MO_SHORT[qStart+2]+' NM + AR',fmt((qMonths[2].nm||0)+(qMonths[2].ar||0)))
-    +srDiv(qN+' Total to Date',fmt(qTotal))
-    +srRowC('vs $720K '+qN+' Breakeven',fmtSigned(q1BE),q1BE>=0?'var(--green2)':'var(--red2)')
-    +srRowC('vs $1.02M '+qN+' Stretch',fmtSigned(q1STR),q1STR>=0?'var(--green2)':'var(--red2)')
-    +srRowC('Annual Pace',annualPct+'%','var(--teal)');
-
+    +srRow(MO_SHORT[qs]+' NM + AR',fmt((qm[0].nm||0)+(qm[0].ar||0)))
+    +srRow(MO_SHORT[qs+1]+' NM + AR',fmt((qm[1].nm||0)+(qm[1].ar||0)))
+    +srRow(MO_SHORT[qs+2]+' NM + AR',fmt((qm[2].nm||0)+(qm[2].ar||0)))
+    +srDiv(qN+' Total to Date',fmt(qT))
+    +srC('vs $720K '+qN+' Breakeven',fmtS(qBE),qBE>=0?'var(--green2)':'var(--red2)')
+    +srC('vs $1.02M '+qN+' Stretch',fmtS(qST),qST>=0?'var(--green2)':'var(--red2)')
+    +srC('Annual Pace',ap+'%','var(--teal)');
   var lc=el('leadsSummaryCard');
-  lc.innerHTML='<div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Leads — '+curMonth+' MTD</div>'
-    +srRow('Total Leads MTD',D.leads.total)
-    +srRow('Consults Booked',D.leads.booked)
+  lc.innerHTML='<div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Leads \u2014 '+MO_NAMES[cm]+' MTD</div>'
+    +srRow('Total Leads MTD',D.leads.total)+srRow('Consults Booked',D.leads.booked)
     +srRow('Consults Completed',D.leads.completed)
     +'<div class="sr"><div class="sr-label" style="opacity:.4">Retainers Sent</div><div class="sr-val" style="color:var(--muted);font-style:italic;font-size:10px">Tracking TBD</div></div>'
-    +srRow('New Clients',newClients)
+    +srRow('New Clients',nc)
     +srDiv('Last Mo. Confirmed Leads','<span style="color:var(--gold2)">'+(lm.leads||0)+'</span>')
     +srRow('Last Mo. New Clients (FU)','<span style="color:var(--gold2)">'+(lm.newClientsTotal||0)+'</span>');
 
-  // ── CALLS
-  _section='calls';
-  var callSrcs=D.calls.sources||[];
+  // Calls
+  var cs=(D.calls&&D.calls.sources)||[];
   el('cr-total').textContent=D.calls.total||0;
   el('cr-qualified').textContent=D.calls.qualified||0;
   el('cr-unqualified').textContent=D.calls.unqualified||0;
   el('cr-unrated').textContent=D.calls.unrated||0;
-  var qp=D.calls.total>0?Math.round((D.calls.qualified||0)/D.calls.total*100):0;
-  el('cr-qual-pct').textContent=qp+'% qualification rate';
-  var mxCalls=Math.max.apply(null,callSrcs.map(function(s){return s.total;}).concat([1]));
-  buildBars('callsBars',callSrcs.map(function(s){return s.total;}),callSrcs.map(function(s){return s.name.replace('Google ','G. ').replace(' My Business',' MyBiz');}),null,'#a855f7');
-  var cb2=el('callsBody');cb2.innerHTML='';
-  if(!callSrcs.length){cb2.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);font-style:italic;padding:16px">No call data</td></tr>';}
-  else{callSrcs.forEach(function(s){var bw=Math.round(s.total/mxCalls*100);cb2.innerHTML+='<tr><td style="font-weight:500">'+s.name+'</td><td style="font-weight:600">'+s.total+'</td><td style="color:var(--green2)">'+s.qualified+'</td><td style="color:var(--red2)">'+s.unqualified+'</td><td style="color:var(--gold2)">'+s.unrated+'</td><td><div class="pct-bar-w"><div class="pct-bar" style="width:'+bw+'%;background:#a855f7"></div></div></td></tr>';});}
+  el('cr-qual-pct').textContent=D.calls.total>0?Math.round((D.calls.qualified||0)/D.calls.total*100)+'% qual rate':'0%';
+  var mxC=Math.max.apply(null,cs.map(function(s){return s.total;}).concat([1]));
+  bars('callsBars',cs.map(function(s){return s.total;}),cs.map(function(s){return s.name.replace('Google ','G. ');}),null,'#a855f7');
+  var cb=el('callsBody');cb.innerHTML='';
+  cs.forEach(function(s){var bw=Math.round(s.total/mxC*100);cb.innerHTML+='<tr><td>'+s.name+'</td><td>'+s.total+'</td><td style="color:var(--green2)">'+s.qualified+'</td><td style="color:var(--red2)">'+s.unqualified+'</td><td style="color:var(--gold2)">'+s.unrated+'</td><td><div class="pct-bar-w"><div class="pct-bar" style="width:'+bw+'%;background:#a855f7"></div></div></td></tr>';});
 
-  // ── ATTORNEYS
-  var totalCasesOverride=CASELOAD_OVERRIDE?Object.values(CASELOAD_OVERRIDE.attorneys).reduce(function(s,a){return s+a.cases;},0):0;
-  _section='attorneys';
-  el('ap-cases').textContent=totalCasesOverride||D.attorneys.totalCases||0;
-  el('ap-hours').textContent=((D.attorneys.billableHours||0).toFixed(1))+' hrs';
-  el('ap-portfolio').textContent=fmt(D.attorneys.portfolioValue||0);
-  el('ap-annual').textContent=fmt(D.attorneys.annualRevenue||0);
+  // Attorneys
+  el('ap-cases').textContent=(D.attorneys&&D.attorneys.totalCases)||aList.reduce(function(s,a){return s+a.cases;},0);
+  el('ap-hours').textContent=((D.attorneys&&D.attorneys.billableHours)||0).toFixed(1)+' hrs';
+  el('ap-portfolio').textContent=fmt((D.attorneys&&D.attorneys.portfolioValue)||0);
+  el('ap-annual').textContent=fmt((D.attorneys&&D.attorneys.annualRevenue)||0);
   var ag=el('attyGrid');ag.innerHTML='';
-  attyList.forEach(function(a,i){
-    var topPA='Indictable',topCnt=a.indictable||0;
-    var paMap={dui:'DUI/DWI',disorderly:'Disorderly',mvt:'Motor Veh.',dvro:'DVRO',investigation:'Investigation',juvenile:'Juvenile',federal:'Federal'};
-    Object.keys(paMap).forEach(function(k){if((a[k]||0)>topCnt){topPA=paMap[k];topCnt=a[k];}});
+  aList.forEach(function(a,i){
+    var top='Indictable',tc=a.indictable||0;
+    var pm2={dui:'DUI/DWI',disorderly:'Disorderly',mvt:'Motor Veh.',dvro:'DVRO',investigation:'Investigation',juvenile:'Juvenile',federal:'Federal'};
+    Object.keys(pm2).forEach(function(k){if((a[k]||0)>tc){top=pm2[k];tc=a[k];}});
     ag.innerHTML+='<div class="atty-card" style="border-top-color:'+ATTY_COLORS[i]+'">'
       +'<div class="atty-name" style="color:'+ATTY_COLORS[i]+'">'+a.name+'</div>'
       +'<div class="atty-row"><div class="atty-row-label">Active Cases</div><div class="atty-row-val">'+a.cases+'</div></div>'
       +'<div class="atty-row"><div class="atty-row-label">Cases YTD</div><div class="atty-row-val">'+a.casesYTD+'</div></div>'
       +'<div class="atty-row"><div class="atty-row-label">Portfolio</div><div class="atty-row-val">'+fmt(a.portfolio)+'</div></div>'
       +'<div class="atty-row"><div class="atty-row-label">2026 Revenue</div><div class="atty-row-val" style="color:var(--green2)">'+fmt(a.annual)+'</div></div>'
-      +'<div class="atty-row"><div class="atty-row-label">Hours</div><div class="atty-row-val">'+a.hours.toFixed(1)+'</div></div>'
-      +'<div class="atty-row"><div class="atty-row-label">Top PA</div><div class="atty-row-val" style="color:var(--orange);font-size:9.5px">'+topPA+'</div></div>'
+      +'<div class="atty-row"><div class="atty-row-label">Hours YTD</div><div class="atty-row-val">'+(a.hours||0).toFixed(1)+'</div></div>'
+      +'<div class="atty-row"><div class="atty-row-label">Top PA</div><div class="atty-row-val" style="color:var(--orange);font-size:9.5px">'+top+'</div></div>'
       +'</div>';
   });
-  buildBars('attyPortfolioBars',attyList.map(function(a){return a.portfolio;}),attyList.map(function(a){return a.short;}),null,'#3b82f6');
-  var apbEl=el('attyPortfolioBars');
-  if(apbEl){apbEl.querySelectorAll('.bar').forEach(function(b,i){b.style.background=ATTY_COLORS[i]||'var(--blue)';});}
+  bars('attyPortfolioBars',aList.map(function(a){return a.portfolio;}),aList.map(function(a){return a.short;}),null,'#3b82f6');
+  var ab=el('attyPortfolioBars');if(ab){ab.querySelectorAll('.bar').forEach(function(b,i){b.style.background=ATTY_COLORS[i]||'var(--blue)';});}
 
-  // ── RESULTS
-  _section='results';
-  var R2=D.results||{};
-  var degList=R2.degrees||[];
-  var noJailPct=R2.totalDisposed>0?Math.round((R2.totalNoJail||0)/R2.totalDisposed*100):0;
-  var dimPct=R2.totalDisposed>0?Math.round((R2.totalDismissed||0)/R2.totalDisposed*100):0;
-  var ptiPct=R2.totalDisposed>0?Math.round((R2.totalPTI||0)/R2.totalDisposed*100):0;
-  el('res-no-jail-pct').textContent=noJailPct+'%';
-  el('res-no-jail-sub').textContent=(R2.totalNoJail||0)+' of '+(R2.totalDisposed||0)+' cases';
-  el('res-dismissed-pct').textContent=dimPct+'%';
-  el('res-dismissed-sub').textContent=(R2.totalDismissed||0)+' dismissed outright';
-  el('res-pti-pct').textContent=ptiPct+'%';
-  el('res-pti-sub').textContent=(R2.totalPTI||0)+' diverted via PTI';
-  el('res-total').textContent=R2.totalDisposed||0;
-  var dg=el('degGrid');dg.innerHTML='';
-  degList.forEach(function(d){
+  // Results
+  var R=D.results||{};var dg=R.degrees||[];
+  var njp=R.totalDisposed>0?Math.round((R.totalNoJail||0)/R.totalDisposed*100):0;
+  var dip=R.totalDisposed>0?Math.round((R.totalDismissed||0)/R.totalDisposed*100):0;
+  var pp=R.totalDisposed>0?Math.round((R.totalPTI||0)/R.totalDisposed*100):0;
+  el('res-no-jail-pct').textContent=njp+'%';el('res-no-jail-sub').textContent=(R.totalNoJail||0)+' of '+(R.totalDisposed||0);
+  el('res-dismissed-pct').textContent=dip+'%';el('res-dismissed-sub').textContent=(R.totalDismissed||0)+' dismissed';
+  el('res-pti-pct').textContent=pp+'%';el('res-pti-sub').textContent=(R.totalPTI||0)+' via PTI';
+  el('res-total').textContent=R.totalDisposed||0;
+  var dgEl=el('degGrid');dgEl.innerHTML='';
+  dg.forEach(function(d){
     if(!d.total)return;
-    var np=Math.round(d.noJail/d.total*100);
-    var col=np>=90?'var(--green2)':np>=70?'var(--gold2)':'var(--red2)';
-    dg.innerHTML+='<div class="deg-card" style="border-top-color:'+col+'"><div class="deg-title">'+d.label+'</div><div class="deg-charge">'+d.charge+'</div><div class="deg-pct" style="color:'+col+'">'+np+'%</div><div class="deg-label">No Jail Rate</div><div class="deg-detail"><strong>'+d.total+'</strong> cases · <strong>'+d.dismissed+'</strong> dismissed · <strong>'+d.pti+'</strong> PTI'+(d.incarc>0?' · <span style="color:var(--red2)">'+d.incarc+' incarc</span>':'')+'</div></div>';
+    var np2=Math.round(d.noJail/d.total*100),nc2=np2>=90?'var(--green2)':np2>=70?'var(--gold2)':'var(--red2)';
+    dgEl.innerHTML+='<div class="deg-card" style="border-top-color:'+nc2+'"><div class="deg-title">'+d.label+'</div><div class="deg-charge">'+d.charge+'</div><div class="deg-pct" style="color:'+nc2+'">'+np2+'%</div><div class="deg-label">No Jail Rate</div><div class="deg-detail"><strong>'+d.total+'</strong> cases \u00b7 <strong>'+d.dismissed+'</strong> dism. \u00b7 <strong>'+d.pti+'</strong> PTI'+(d.incarc>0?' \u00b7 <span style="color:var(--red2)">'+d.incarc+' incarc</span>':'')+'</div></div>';
   });
   var rtb=el('resultsBody');rtb.innerHTML='';
-  degList.forEach(function(d){
+  dg.forEach(function(d){
     if(!d.total)return;
-    var np=Math.round(d.noJail/d.total*100);
-    var nc=np>=95?'var(--green2)':np>=75?'var(--gold2)':'var(--red2)';
-    rtb.innerHTML+='<tr><td style="font-weight:600">'+d.label+'</td><td>'+d.total+'</td><td style="color:var(--green2)">'+d.dismissed+'</td><td style="color:var(--teal)">'+d.pti+'</td><td style="font-weight:600">'+d.noJail+'</td><td style="color:'+(d.incarc>0?'var(--red2)':'var(--muted)')+'">'+d.incarc+'</td><td style="color:'+nc+';font-weight:700">'+np+'%</td></tr>';
+    var np2=Math.round(d.noJail/d.total*100),nc2=np2>=95?'var(--green2)':np2>=75?'var(--gold2)':'var(--red2)';
+    rtb.innerHTML+='<tr><td style="font-weight:600">'+d.label+'</td><td>'+d.total+'</td><td style="color:var(--green2)">'+d.dismissed+'</td><td style="color:var(--teal)">'+d.pti+'</td><td>'+d.noJail+'</td><td style="color:'+(d.incarc>0?'var(--red2)':'var(--muted)')+'">'+d.incarc+'</td><td style="color:'+nc2+';font-weight:700">'+np2+'%</td></tr>';
   });
-  var marquee=[
-    {note:'Client faced 10-20 yr mandatory min.',charge:'1st Deg. Sexual Assault',outcome:'4th Degree Plea — No Megan’s Law — No Jail',atty:'D. Esposito'},
-    {note:'Potential life sentence reduced.',charge:'1st Deg. Vehicular Homicide',outcome:'Reduced to 3rd Degree Plea',atty:'P. Di Lella'},
-    {note:'Exceptional diversion on serious charge.',charge:'3rd Deg. Possession CSAM',outcome:'36 Months PTI — No Prison',atty:'P. Di Lella'},
-    {note:'Pre-trial intervention on 2nd degree.',charge:'2nd Deg. Sexual Assault',outcome:'PTI — No Conviction',atty:'D. Esposito'},
-    {note:'Zero clients jailed across all DP matters.',charge:'Disorderly Persons (116 Cases)',outcome:'100% No Jail Rate',atty:'All Attorneys'}
-  ];
   var mg=el('marqueeGrid');mg.innerHTML='';
-  marquee.forEach(function(m){mg.innerHTML+='<div class="highlight-card"><div class="hl-result">'+m.note+'</div><div class="hl-charge">'+m.charge+'</div><div class="hl-outcome">✓ '+m.outcome+'</div><div class="hl-atty">'+m.atty+'</div></div>';});
+  [{n:'Client faced 10-20 yr mandatory min.',c:'1st Deg. Sexual Assault',o:'4th Degree Plea \u2014 No Megan\u2019s Law \u2014 No Jail',a:'D. Esposito'},{n:'Potential life sentence.',c:'1st Deg. Vehicular Homicide',o:'Reduced to 3rd Degree Plea',a:'P. Di Lella'},{n:'Exceptional diversion.',c:'3rd Deg. Possession CSAM',o:'36 Months PTI \u2014 No Prison',a:'P. Di Lella'},{n:'PTI on 2nd degree.',c:'2nd Deg. Sexual Assault',o:'PTI \u2014 No Conviction',a:'D. Esposito'},{n:'Zero jailed across all DP matters.',c:'Disorderly Persons (116 Cases)',o:'100% No Jail Rate',a:'All Attorneys'}].forEach(function(m){mg.innerHTML+='<div class="highlight-card"><div class="hl-result">'+m.n+'</div><div class="hl-charge">'+m.c+'</div><div class="hl-outcome">\u2713 '+m.o+'</div><div class="hl-atty">'+m.a+'</div></div>';});
 
-  // ── PROFITABILITY
-  _section='profitability';
-  var paList=D.profitability||[];
-  if(paList.length){
-    var tFhr=paList.reduce(function(a,b){return (b.feeHr||0)>(a.feeHr||0)?b:a;});
-    var tHrs=paList.reduce(function(a,b){return (b.avgHrs||0)>(a.avgHrs||0)?b:a;});
-    var tDays=paList.reduce(function(a,b){return (b.avgDays||0)>(a.avgDays||0)?b:a;});
-    el('prof-top-fhr').textContent=fmt(tFhr.feeHr)+'/hr';el('prof-top-fhr-pa').textContent=tFhr.name;
-    el('prof-top-hrs').textContent=(tHrs.avgHrs||0).toFixed(1)+' hrs';el('prof-top-hrs-pa').textContent=tHrs.name;
-    el('prof-top-days').textContent=Math.round(tDays.avgDays||0)+' days';el('prof-top-days-pa').textContent=tDays.name;
-    var sorted=paList.slice().sort(function(a,b){return (b.feeHr||0)-(a.feeHr||0);}).slice(0,6);
+  // Profitability
+  var pa=D.profitability||[];
+  if(pa.length){
+    var tf=pa.reduce(function(a,b){return (b.feeHr||0)>(a.feeHr||0)?b:a;});
+    var th=pa.reduce(function(a,b){return (b.avgHrs||0)>(a.avgHrs||0)?b:a;});
+    var td=pa.reduce(function(a,b){return (b.avgDays||0)>(a.avgDays||0)?b:a;});
+    el('prof-top-fhr').textContent=fmt(tf.feeHr)+'/hr';el('prof-top-fhr-pa').textContent=tf.name;
+    el('prof-top-hrs').textContent=(th.avgHrs||0).toFixed(1)+' hrs';el('prof-top-hrs-pa').textContent=th.name;
+    el('prof-top-days').textContent=Math.round(td.avgDays||0)+' days';el('prof-top-days-pa').textContent=td.name;
     var pg=el('profGrid');pg.innerHTML='';
-    sorted.forEach(function(p){
-      var fc2=(p.feeHr||0)>=500?'var(--green2)':(p.feeHr||0)>=300?'var(--teal)':'var(--gold2)';
-      pg.innerHTML+='<div class="prof-card"><div class="prof-name">'+p.name+'</div><div class="prof-fee" style="color:'+fc2+'">'+fmt(p.feeHr||0)+'/hr</div><div class="prof-sub">'+p.cases+' cases · avg '+fmt(p.avgFee)+' ret.</div><div class="prof-stats"><div class="ps"><div class="ps-val">'+((p.avgHrs||0).toFixed(1))+'</div><div class="ps-lbl">Avg Hrs</div></div><div class="ps"><div class="ps-val">'+((p.hrsMo||0).toFixed(1))+'</div><div class="ps-lbl">Hrs/Mo</div></div><div class="ps"><div class="ps-val">'+Math.round(p.avgDays||0)+'</div><div class="ps-lbl">Avg Days</div></div><div class="ps"><div class="ps-val">'+fmt(p.avgFee||0)+'</div><div class="ps-lbl">Avg Ret.</div></div></div></div>';
+    pa.slice().sort(function(a,b){return (b.feeHr||0)-(a.feeHr||0);}).slice(0,6).forEach(function(p){
+      var fc=((p.feeHr||0)>=500?'var(--green2)':(p.feeHr||0)>=300?'var(--teal)':'var(--gold2)');
+      pg.innerHTML+='<div class="prof-card"><div class="prof-name">'+p.name+'</div><div class="prof-fee" style="color:'+fc+'">'+fmt(p.feeHr||0)+'/hr</div><div class="prof-sub">'+p.cases+' cases \u00b7 avg '+fmt(p.avgFee||0)+'</div><div class="prof-stats"><div class="ps"><div class="ps-val">'+((p.avgHrs||0).toFixed(1))+'</div><div class="ps-lbl">Avg Hrs</div></div><div class="ps"><div class="ps-val">'+((p.hrsMo||0).toFixed(1))+'</div><div class="ps-lbl">Hrs/Mo</div></div><div class="ps"><div class="ps-val">'+Math.round(p.avgDays||0)+'</div><div class="ps-lbl">Avg Days</div></div><div class="ps"><div class="ps-val">'+fmt(p.avgFee||0)+'</div><div class="ps-lbl">Avg Ret.</div></div></div></div>';
     });
     var ptb=el('profBody');ptb.innerHTML='';
-    paList.slice().sort(function(a,b){return (b.feeHr||0)-(a.feeHr||0);}).forEach(function(p){
-      var fc2=(p.feeHr||0)>=500?'var(--green2)':(p.feeHr||0)>=300?'var(--teal)':'var(--gold2)';
-      ptb.innerHTML+='<tr><td style="font-weight:600">'+p.name+'</td><td>'+p.cases+'</td><td style="font-weight:600">'+fmt(p.avgFee||0)+'</td><td>'+((p.avgHrs||0).toFixed(1))+'h</td><td style="color:'+fc2+';font-weight:700">'+fmt(p.feeHr||0)+'</td></tr>';
+    pa.slice().sort(function(a,b){return (b.feeHr||0)-(a.feeHr||0);}).forEach(function(p){
+      var fc=((p.feeHr||0)>=500?'var(--green2)':(p.feeHr||0)>=300?'var(--teal)':'var(--gold2)');
+      ptb.innerHTML+='<tr><td style="font-weight:600">'+p.name+'</td><td>'+p.cases+'</td><td>'+fmt(p.avgFee||0)+'</td><td>'+((p.avgHrs||0).toFixed(1))+'h</td><td style="color:'+fc+';font-weight:700">'+fmt(p.feeHr||0)+'</td></tr>';
     });
   }
 
-  // ── CASE LOAD
-  _section='caseload';
-  var totInd=0,totInv=0,totMuni=0,totCases=0;
-  attyList.forEach(function(a){totCases+=a.cases||0;totInd+=(a.indictable||0);totInv+=(a.investigation||0);totMuni+=(a.disorderly||0)+(a.dui||0)+(a.mvt||0);});
-  var avgCases=attyList.length>0?Math.round(totCases/attyList.length):0;
-  var sumData=[{val:totInd,lbl:'Indictable',color:'#f97316'},{val:totInv,lbl:'Investigation',color:'#fbbf24'},{val:totMuni,lbl:'Muni/DUI/MVT',color:'#22c55e'},{val:avgCases,lbl:'Avg Cases',color:'#06b6d4'},{val:totCases,lbl:'Total Matters',color:'#f0f0f0'}];
-  var cs=el('clSummary');cs.innerHTML=sumData.map(function(s){return '<div class="cl-sum-card"><div class="cl-sum-val" style="color:'+s.color+'">'+s.val+'</div><div class="cl-sum-lbl">'+s.lbl+'</div></div>';}).join('');
-  var clg=el('clGrid');clg.innerHTML='';
-  var CL_KEYS=['indictable','dui','disorderly','mvt','dvro','investigation','juvenile','federal','victimAdvocate','appeal'];
-  var CL_LBLS={indictable:'Indictable',dui:'DUI/DWI',disorderly:'Disorderly',mvt:'Motor Veh.',dvro:'DVRO',investigation:'Investigation',juvenile:'Juvenile',federal:'Federal',victimAdvocate:'Victim Adv.',appeal:'Appeal'};
-  attyList.forEach(function(a,i){
-    var pas=[];
-    CL_KEYS.forEach(function(k){if(a[k]&&a[k]>0)pas.push({lbl:CL_LBLS[k],cnt:a[k]});});
-    pas.sort(function(x,y){return y.cnt-x.cnt;});
-    var mx2=pas.length>0?pas[0].cnt:1;
-    var paHtml=pas.slice(0,6).map(function(p){var w=Math.round(p.cnt/mx2*100);return '<div class="cl-pa-row"><span class="cl-pa-lbl">'+p.lbl+'</span><div class="cl-bar-w"><div class="cl-bar" style="width:'+w+'%;background:'+ATTY_COLORS[i]+'"></div></div><span class="cl-pa-cnt">'+p.cnt+'</span></div>';}).join('');
-    clg.innerHTML+='<div class="cl-card"><div class="cl-hdr"><div><div class="cl-name" style="color:'+ATTY_COLORS[i]+'">'+a.name+'</div></div><div><div class="cl-total">'+a.cases+'</div><div class="cl-total-lbl">Active</div></div></div>'+paHtml+'</div>';
+  // Case Load
+  var totI=0,totV=0,totM=0,totC=0;
+  aList.forEach(function(a){totC+=a.cases||0;totI+=(a.indictable||0);totV+=(a.investigation||0);totM+=(a.disorderly||0)+(a.dui||0)+(a.mvt||0);});
+  var clS=el('clSummary');
+  clS.innerHTML=[{v:totI,l:'Indictable',c:'#f97316'},{v:totV,l:'Investigation',c:'#fbbf24'},{v:totM,l:'Muni/DUI/MVT',c:'#22c55e'},{v:aList.length?Math.round(totC/aList.length):0,l:'Avg Cases',c:'#06b6d4'},{v:totC,l:'Total Matters',c:'#f0f0f0'}].map(function(s){return '<div class="cl-sum-card"><div class="cl-sum-val" style="color:'+s.c+'">'+s.v+'</div><div class="cl-sum-lbl">'+s.l+'</div></div>';}).join('');
+  var clG=el('clGrid');clG.innerHTML='';
+  var CK=['indictable','dui','disorderly','mvt','dvro','investigation','juvenile','federal','victimAdvocate','appeal'];
+  var CL={indictable:'Indictable',dui:'DUI/DWI',disorderly:'Disorderly',mvt:'Motor Veh.',dvro:'DVRO',investigation:'Investigation',juvenile:'Juvenile',federal:'Federal',victimAdvocate:'Victim Adv.',appeal:'Appeal'};
+  aList.forEach(function(a,i){
+    var pas=[];CK.forEach(function(k){if(a[k]&&a[k]>0)pas.push({l:CL[k],n:a[k]});});
+    pas.sort(function(x,y){return y.n-x.n;});
+    var mx2=pas.length?pas[0].n:1;
+    var ph=pas.slice(0,6).map(function(p){return '<div class="cl-pa-row"><span class="cl-pa-lbl">'+p.l+'</span><div class="cl-bar-w"><div class="cl-bar" style="width:'+Math.round(p.n/mx2*100)+'%;background:'+ATTY_COLORS[i]+'"></div></div><span class="cl-pa-cnt">'+p.n+'</span></div>';}).join('');
+    clG.innerHTML+='<div class="cl-card"><div class="cl-hdr"><div><div class="cl-name" style="color:'+ATTY_COLORS[i]+'">'+a.name+'</div></div><div><div class="cl-total">'+a.cases+'</div><div class="cl-total-lbl">Active</div></div></div>'+ph+'</div>';
   });
-  var cu=el('clUpdated');if(cu)cu.textContent='Source: Clio — Last updated: '+(D.attorneys.updated||'unknown');
+  var cu=el('clUpdated');if(cu)cu.textContent='Source: Clio \u2014 '+((D.attorneys&&D.attorneys.updated)||'');
 }
-
-  } catch(e) {
-    var bar=el('dataBar');
-    if(bar){bar.style.color='var(--red2)';bar.innerHTML='<span>✗</span> Render error in ['+_section+']: '+e.message;}
-    console.error('renderDashboard error in section:', _section, e);
-  }
-}
-
-function srRow(lbl,val){return '<div class="sr"><div class="sr-label">'+lbl+'</div><div class="sr-val">'+val+'</div></div>';}
-function srDiv(lbl,val){return '<div class="sr sr-div"><div class="sr-label">'+lbl+'</div><div class="sr-val">'+val+'</div></div>';}
-function srRowC(lbl,val,col){return '<div class="sr"><div class="sr-label">'+lbl+'</div><div class="sr-val" style="color:'+col+'">'+val+'</div></div>';}
 
 loadData();
 </script>
