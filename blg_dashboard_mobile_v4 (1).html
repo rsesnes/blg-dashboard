@@ -341,12 +341,6 @@ var LIVE_DATA={lastUpdated:"2026-06-15",curMonth:6,curQuarter:2,
 
 // June 2, 2026 accurate case counts from Krystan's report
 // These override Clio case counts which are less accurate
-var CASELOAD={
-  ce:{cases:29,indictable:14,disorderly:1,investigation:5,restraining:2,dui:5,mvt:0,juvenile:1,terpo:1,federal:0,other:0,ytdOpened:21},
-  de:{cases:33,indictable:18,disorderly:4,investigation:5,restraining:0,dui:1,mvt:0,juvenile:4,terpo:1,federal:0,other:0,ytdOpened:18},
-  pd:{cases:31,indictable:16,disorderly:5,investigation:7,restraining:0,dui:0,mvt:0,juvenile:0,terpo:1,federal:1,other:1,ytdOpened:19},
-  tm:{cases:50,indictable:1,disorderly:25,investigation:0,restraining:0,dui:16,mvt:8,juvenile:0,terpo:0,federal:0,other:0,ytdOpened:59}
-};
 
 var BREAKEVEN=240000,STRETCH=340000,ANNUAL_GOAL=4080000,WKBE=55000,WKSTR=85000;
 var QTR_NAMES=['','Q1','Q2','Q3','Q4'];
@@ -612,23 +606,8 @@ function renderDashboard(D){
   var cb=el('callsBody');cb.innerHTML='';
   cs.forEach(function(s){var bw=Math.round(s.total/mxC*100);cb.innerHTML+='<tr><td>'+s.name+'</td><td>'+s.total+'</td><td style="color:var(--green2)">'+s.qualified+'</td><td style="color:var(--red2)">'+s.unqualified+'</td><td style="color:var(--gold2)">'+s.unrated+'</td><td><div class="pct-bar-w"><div class="pct-bar" style="width:'+bw+'%;background:#a855f7"></div></div></td></tr>';});
 
-  // Attorneys — merge Krystan's accurate case counts over Clio list
-  var CK2=['ce','de','pd','tm'];
-  var CN2={ce:'Christopher Eaton',de:'Danielle Esposito',pd:'Paul Di Lella',tm:'Tricia Margolis'};
-  var CS2={ce:'Eaton',de:'Esposito',pd:'Di Lella',tm:'Margolis'};
-  if(aList.length>0){
-    aList=CK2.map(function(k,i){
-      var cl=CASELOAD[k];
-      var clio=aList.filter(function(a){return a.name&&a.name.toLowerCase().indexOf(CN2[k].split(' ')[1].toLowerCase())>=0;})[0]||aList[i]||{};
-      return {name:CN2[k],short:CS2[k],
-        cases:cl.cases,casesYTD:cl.ytdOpened,
-        portfolio:clio.portfolio||0,annual:clio.annual||0,hours:clio.hours||0,
-        indictable:cl.indictable,dui:cl.dui,disorderly:cl.disorderly,
-        mvt:cl.mvt,dvro:cl.restraining,investigation:cl.investigation,
-        juvenile:cl.juvenile,federal:cl.federal,victimAdvocate:0,appeal:0};
-    });
-  }
-  var totalCases=Object.keys(CASELOAD).reduce(function(s,k){return s+CASELOAD[k].cases;},0);
+  // Attorneys — case counts now come directly from live blg_data.json (via CaseLoad_Bridge)
+  var totalCases=(D.attorneys&&D.attorneys.totalCases)||aList.reduce(function(s,a){return s+a.cases;},0);
   el('ap-cases').textContent=totalCases;
   el('ap-hours').textContent=((D.attorneys&&D.attorneys.billableHours)||0).toFixed(1)+' hrs';
   el('ap-portfolio').textContent=fmt((D.attorneys&&D.attorneys.portfolioValue)||0);
